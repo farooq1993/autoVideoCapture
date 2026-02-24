@@ -25,8 +25,8 @@ with app.app_context():
     except Exception as e:
         logger.error(f"Error initializing database: {e}")
 
-# Create videos directory if it doesn't exist
-os.makedirs('videos', exist_ok=True)
+# Create recordings directory if it doesn't exist
+os.makedirs('recordings', exist_ok=True)
 
 
 @app.route('/')

@@ -11,6 +11,19 @@ logger = logging.getLogger(__name__)
 
 api_bp = Blueprint('api', __name__, url_prefix='/api')
 
+class RecordingSession:
+    """Track recording session state"""
+    def __init__(self, username, user_id, total_duration, chunk_duration):
+        self.username = username
+        self.user_id = user_id
+        self.total_duration = total_duration
+        self.chunk_duration = chunk_duration
+        self.clip_count = 0
+        self.is_active = True
+        self.start_time = datetime.now()
+        self.thread = None
+        self.recorder = None
+
 # Global variable to track recording state
 recording_threads = {}
 
@@ -193,37 +206,45 @@ def start_recording():
             user_name=username,
             chunk_duration_seconds=chunk_duration,
             total_duration_seconds=total_duration,
-            output_dir="videos"
+            output_dir="recordings"
         )
-        
+
+        # Create recording session to track clip count
+        session = RecordingSession(username, user_id, total_duration, chunk_duration)
+
         def save_chunk_callback(chunk_info):
             """Callback to save chunk info to database"""
             try:
                 db = SessionLocal()
-                
+                session.clip_count += 1
+
                 video_chunk = VideoChunk(
+                    clip_id=session.clip_count,
                     user_id=user_id,
                     user_name=chunk_info['user_name'],
+                    recording_date=datetime.now(),
                     file_name=chunk_info['file_name'],
                     file_path=chunk_info['file_path'],
-                    record_start_time=chunk_info['record_start_time'],
-                    record_end_time=chunk_info['record_end_time'],
-                    duration_seconds=total_duration,
+                    start_time=chunk_info['record_start_time'],
+                    end_time=chunk_info['record_end_time'],
+                    duration_seconds=int(chunk_info['duration']),
                     chunk_duration_seconds=chunk_duration
                 )
-                
+
                 db.add(video_chunk)
                 db.commit()
                 db.close()
-                
-                logger.info(f"Chunk saved to database: {chunk_info['file_name']}")
+
+                logger.info(f"Chunk {session.clip_count} saved to database: {chunk_info['file_name']}")
             except Exception as e:
                 logger.error(f"Error saving chunk to database: {e}")
         
         # Start recording in a separate thread
         thread = recorder.start_recording_thread(callback=save_chunk_callback)
-        
-        # Store thread reference
+
+        # Store thread reference with session
+        session.thread = thread
+        session.recorder = recorder
         recording_threads[username] = {
             'thread': thread,
             'recorder': recorder,
@@ -231,7 +252,8 @@ def start_recording():
             'start_time': datetime.now(),
             'user_id': user_id,
             'total_duration': total_duration,
-            'chunk_duration': chunk_duration
+            'chunk_duration': chunk_duration,
+            'session': session
         }
         
         return jsonify({

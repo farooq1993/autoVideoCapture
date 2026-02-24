@@ -14,7 +14,7 @@ class VideoRecorder:
     Records video in chunks of specified duration (default: 3 minutes).
     """
     
-    def __init__(self, user_name, chunk_duration_seconds=180, total_duration_seconds=900, output_dir="videos"):
+    def __init__(self, user_name, chunk_duration_seconds=180, total_duration_seconds=900, output_dir="recordings"):
         """
         Initialize the video recorder.
         
@@ -41,9 +41,9 @@ class VideoRecorder:
         self.frame_height = 480
         
     def get_chunk_filename(self, chunk_number):
-        """Generate chunk filename with timestamp"""
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        return f"{self.user_name}_{timestamp}_chunk_{chunk_number}.mp4"
+        """Generate chunk filename matching spec: clip_<clip_id>.mp4"""
+        # Using chunk_number as clip_id; full tracking happens in DB
+        return f"clip_{chunk_number}.mp4"
     
     def record_video(self, callback=None):
         """
