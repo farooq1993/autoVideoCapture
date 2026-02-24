@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📊 Video Dashboard</h1>
+            <p>View and manage your recorded video chunks</p>
+        </header>
+
+        <main>
+            <!-- Filter Section -->
+            <section class="card filter-section">
+                <h2>Filter Videos</h2>
+                <div class="form-group">
+                    <label for="filterUserSelect">Filter by User:</label>
+                    <select id="filterUserSelect" onchange="applyFilter()">
+                        <option value="">All Users</option>
+                    </select>
+                </div>
+            </section>
+
+            <!-- Statistics Section -->
+            <section class="card stats-section">
+                <h2>Statistics</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h3 id="totalChunks">0</h3>
+                        <p>Total Chunks</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3 id="totalUsers">0</h3>
+                        <p>Unique Users</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3 id="totalDuration">0h</h3>
+                        <p>Total Recording Time</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Videos List -->
+            <section class="card videos-section">
+                <h2>Recorded Videos</h2>
+                <div id="videosContainer" class="videos-container">
+                    <p class="loading">Loading videos...</p>
+                </div>
+            </section>
+
+            <!-- Messages -->
+            <div id="messageBox" class="message-box" style="display: none;">
+                <span id="messageText"></span>
+            </div>
+        </main>
+
+        <footer>
+            <p>&copy; 2026 Video Recording App | Built with Flask & OpenCV</p>
+        </footer>
+    </div>
+
+    <script src="{{ url_for('static', filename='dashboard.js') }}"></script>
+</body>
+</html>

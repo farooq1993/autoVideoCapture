@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Recording App</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎥 Video Recording Application</h1>
+            <p>Record videos from your webcam with automatic chunking</p>
+        </header>
+
+        <main>
+            <!-- User Authentication Section -->
+            <section class="card auth-section" id="authSection">
+                <h2>👤 User Management</h2>
+                
+                <div class="tab-buttons">
+                    <button class="tab-btn active" onclick="showLoginTab()">Login</button>
+                    <button class="tab-btn" onclick="showRegisterTab()">Register</button>
+                </div>
+
+                <!-- Login Tab -->
+                <div id="loginTab" class="tab-content active">
+                    <h3>Login to Your Account</h3>
+                    <div class="form-group">
+                        <label for="loginUsername">Username:</label>
+                        <input 
+                            type="text" 
+                            id="loginUsername" 
+                            placeholder="Enter your username" 
+                            required
+                        >
+                    </div>
+                    <button class="btn btn-primary" onclick="loginUser()">🔓 Login</button>
+                </div>
+
+                <!-- Register Tab -->
+                <div id="registerTab" class="tab-content">
+                    <h3>Create New Account</h3>
+                    <div class="form-group">
+                        <label for="regUsername">Username:</label>
+                        <input 
+                            type="text" 
+                            id="regUsername" 
+                            placeholder="Choose a username (3+ characters)" 
+                            required
+                        >
+                    </div>
+                    <div class="form-group">
+                        <label for="regEmail">Email (Optional):</label>
+                        <input 
+                            type="email" 
+                            id="regEmail" 
+                            placeholder="your@email.com"
+                        >
+                    </div>
+                    <button class="btn btn-primary" onclick="registerUser()">✓ Register</button>
+                </div>
+
+                <!-- Current User Display -->
+                <div id="currentUserSection" style="display: none; margin-top: 20px; padding-top: 20px; border-top: 2px solid #ddd;">
+                    <p style="font-size: 1rem; margin: 10px 0;">
+                        <strong>Logged in as:</strong> <span id="currentUsername" style="color: #667eea; font-weight: 600;"></span>
+                    </p>
+                    <button class="btn btn-secondary" onclick="logoutUser()">🚪 Logout</button>
+                </div>
+            </section>
+
+            <!-- Recording Section -->
+            <section class="card recording-section" id="recordingSection" style="display: none;">
+                <h2>⏱️ Recording Settings</h2>
+                
+                <div class="settings-grid">
+                    <div class="form-group">
+                        <label for="totalDuration">Total Recording Duration:</label>
+                        <select id="totalDuration" onchange="updateExpectedChunks()">
+                            <option value="300">5 minutes</option>
+                            <option value="600">10 minutes</option>
+                            <option value="900" selected>15 minutes</option>
+                            <option value="1200">20 minutes</option>
+                            <option value="1800">30 minutes</option>
+                            <option value="custom">Custom Duration</option>
+                        </select>
+                        <input 
+                            type="number" 
+                            id="customDuration" 
+                            placeholder="Enter duration in seconds" 
+                            min="60" 
+                            step="60"
+                            style="display: none; margin-top: 10px;"
+                            onchange="updateExpectedChunks()"
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="chunkDuration">Chunk Duration (per file):</label>
+                        <select id="chunkDuration" onchange="updateExpectedChunks()">
+                            <option value="60">1 minute</option>
+                            <option value="120">2 minutes</option>
+                            <option value="180" selected>3 minutes</option>
+                            <option value="300">5 minutes</option>
+                            <option value="600">10 minutes</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <p><strong>Expected Chunks:</strong> <span id="expectedChunks">5</span> chunks</p>
+                    <p><strong>Total Recording Time:</strong> <span id="totalTime">15</span> minutes</p>
+                </div>
+
+                <div class="button-group">
+                    <button id="startBtn" class="btn btn-primary" onclick="startRecording()">
+                        ▶️ Start Recording
+                    </button>
+                    <button id="stopBtn" class="btn btn-danger" onclick="stopRecording()" disabled>
+                        ⏹️ Stop Recording
+                    </button>
+                </div>
+
+                <!-- Recording Status -->
+                <div id="statusBox" class="status-box" style="display: none;">
+                    <div class="status-content">
+                        <h3>Recording Status</h3>
+                        <p>User: <strong id="statusUser">--</strong></p>
+                        <p>Elapsed: <strong id="statusElapsed">0:00</strong> / <span id="statusTotal">15:00</span></p>
+                        <p>Chunks Recorded: <strong id="statusChunks">0</strong>/<span id="statusExpectedChunks">5</span></p>
+                        <div class="progress-bar">
+                            <div id="progressFill" class="progress-fill"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Quick Links -->
+            <section class="card quick-links">
+                <h2>Quick Actions</h2>
+                <a href="/dashboard" class="btn btn-secondary">📊 View Dashboard</a>
+            </section>
+
+            <!-- Messages -->
+            <div id="messageBox" class="message-box" style="display: none;">
+                <span id="messageText"></span>
+            </div>
+        </main>
+
+        <footer>
+            <p>&copy; 2026 Video Recording App | Built with Flask & OpenCV</p>
+        </footer>
+    </div>
+
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>

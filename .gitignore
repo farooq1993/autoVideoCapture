@@ -1,0 +1,42 @@
+# Environment files
+env/
+venv/
+__pycache__/
+*.py[cod]
+*$py.class
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Project specific
+videos/
+*.mp4
+*.avi
+*.mov
+*.mkv
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+.temp/
+tmp/
+temp/
+
+# Environment variables
+.env
+.env.local
