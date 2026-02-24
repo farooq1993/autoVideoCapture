@@ -17,7 +17,7 @@ __pycache__/
 Thumbs.db
 
 # Project specific
-videos/
+recordings/
 *.mp4
 *.avi
 *.mov
@@ -36,7 +36,11 @@ logs/
 .temp/
 tmp/
 temp/
+tmpclaude-*/
 
 # Environment variables
 .env
 .env.local
+*-cwd/
+
+

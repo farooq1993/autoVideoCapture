@@ -2,6 +2,15 @@
 
 A Flask-based web application for recording real-time video from a webcam with automatic chunking and storage in MySQL database.
 
+## ⚠️ AI Usage
+
+This project was developed with AI assistance from Claude (Anthropic). AI was used for:
+- Code structure and architecture design
+- API endpoint implementation
+- Database schema design
+- Frontend JavaScript logic
+- Documentation and README
+
 ## Features
 
 ✅ **Real-time Video Recording** - Record video directly from your webcam
@@ -28,7 +37,7 @@ app/
 │   ├── app.js             # Recording page JavaScript
 │   ├── dashboard.js       # Dashboard JavaScript
 │   └── style.css          # Styling
-└── videos/                # Directory to store video chunks
+└── recordings/            # Directory to store video chunks
 ```
 
 ## System Requirements
@@ -139,12 +148,17 @@ The application will be available at:
 | Column | Type | Description |
 |--------|------|-------------|
 | id | INTEGER | Primary key |
+| clip_id | INTEGER | Sequential clip number |
+| user_id | INTEGER | Foreign key to users table |
 | user_name | VARCHAR(255) | Name of the user who recorded |
+| recording_date | DATETIME | Date when recording occurred |
 | file_name | VARCHAR(255) | Name of the video file |
 | file_path | VARCHAR(500) | Full path to the video file |
-| record_start_time | DATETIME | When chunk recording started |
-| record_end_time | DATETIME | When chunk recording ended |
-| created_at | DATETIME | When record was created |
+| start_time | DATETIME | When chunk recording started |
+| end_time | DATETIME | When chunk recording ended |
+| duration_seconds | INTEGER | Duration of chunk in seconds |
+| chunk_duration_seconds | INTEGER | Configured chunk duration |
+| created_at | DATETIME | When record was created in database |
 
 ## Configuration
 
@@ -157,7 +171,7 @@ recorder = VideoRecorder(
     user_name=user_name,
     chunk_duration_seconds=180,      # 3 minutes
     total_duration_seconds=900,      # 15 minutes
-    output_dir="videos"              # Output directory
+    output_dir="recordings"          # Output directory
 )
 ```
 
@@ -185,7 +199,7 @@ self.codec = cv2.VideoWriter_fourcc(*'mp4v')  # Video codec
 - Check username and password
 
 ### Videos Not Saving
-- Verify you have write permissions to the `videos/` directory
+- Verify you have write permissions to the `recordings/` directory
 - Check disk space availability
 - Review application logs for errors
 

@@ -183,7 +183,7 @@ d:\videochunks\
 │   │   ├── app.js              (Recording logic)
 │   │   ├── dashboard.js        (Dashboard logic)
 │   │   └── style.css           (Styling)
-│   ├── videos/                 (Saved videos - auto-created)
+│   ├── recordings/             (Saved videos - auto-created)
 │   └── __pycache__/
 ├── env/                        (Virtual environment)
 ├── README.md                   (Full documentation)
@@ -252,14 +252,14 @@ When you start recording:
 
 ## Recording Parameters (Can Be Changed)
 
-In `app/video_recorder.py`, line 18-20:
+In `app/video_recorder.py`, line 17:
 
 ```python
 recorder = VideoRecorder(
     user_name=user_name,
     chunk_duration_seconds=180,      # Change to adjust chunk size
     total_duration_seconds=900,      # Change total recording time
-    output_dir="videos"
+    output_dir="recordings"
 )
 ```
 
